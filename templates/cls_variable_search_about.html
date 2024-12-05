@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- NOTE links to CSS and scripts include those to https: addresses, these resources could be opies down to the 'static' folder of the CSL variable search project ??-->
+<html lang="en">
+  <head>    
+
+    <!-- css stylking files   NOT SURE IF NEEDED ON ABOUT PAGE???? -->
+    <link href="https://cdn.datatables.net/2.0.0/css/dataTables.jqueryui.min.css" rel="stylesheet">
+    <link rel="stylesheet"  type="text/css" href="{{ url_for('static',  filename='bootstrap.min.css')}}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Comfortaa">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"   rel="stylesheet" />
+
+
+    <style>
+      body {background-color: white;} 
+      h1   {color: blue;}
+      p    {color: red;}
+      table,
+        th,
+        td {
+            border-collapse: collapse;
+            padding: 5px;
+        }
+ 
+<!-- 
+    .select2-results__options {
+     	max-height: 800px !important;
+     }
+    
+     .select2-container--default .select2-results>.select2-results__options {
+     	max-height: 800px !important;
+     }
+ --> 
+     .select2-container--classic .select2-results>.select2-results__options {
+     	max-height: 800px !important;
+     }  
+     
+   .logo {
+        width: 200px; /* Set the width you want */
+        height: auto; /* Maintain aspect ratio */
+      }
+      
+    .purple-text {
+        color: purple;
+      }
+    .black-text {
+        color: black;
+      }  
+    .dark-blue-text {
+        color: #00008B; /* Dark blue text */
+    }    
+  
+      .image-container {
+        margin-right: 60px;
+        display:inline;
+        vertical-align: top; 
+      }
+      
+      .text-container {
+        flex-grow: 1;
+        align-items: center;
+      }
+      .navbar{
+        justify-content: end;
+        border-radius: 20px;
+      }
+      .inline-container {
+          display: flex
+          flex: 1;
+          display:  inline-block;
+          vertical-align: top; 
+      }
+
+      .container {
+        margin-left: 0;}
+        
+      .container-left {
+        margin-left: 30px;}
+
+
+    </style>
+
+
+  </head>
+
+  <body>
+<!--
+    <div class="container" style="margin: 0;">
+    -->
+    
+    <div class="container" >
+
+      <div class="flex-container">
+          <div class="image-container">
+            <img src="https://cls.ucl.ac.uk/wp-content/themes/ucl/images/logo_red.svg" alt="" class="logo">
+          </div>
+          <div class="inline-container">
+            <nav class="navbar">  
+                <ul class="nav navbar-nav navbar-right">
+                    <li role="presentation"><a href="/"><span class="fas fa-search"></span> Browse Variables</a></li>
+                    <li role="presentation"><a href="/get_metadata"><span class="fas fa-cloud-download-alt"></span> Download Full Metadata</a></li>
+                    <li role="presentation"><a href="/about"><span class="fas fa-info"></span> Metadata Guide</a></li>
+                </ul>
+            </nav>            
+            <h1 class="dark-blue-text">Metadata Guide</h1>
+          </div>
+          <div class="text-container">
+            <p class="purple-text"  style="margin-top: 20px;"> This BETA site version 1.0 is subject to ongoing testing and improvements.  For more information, provide feedback or report issues, please <a href="mailto:clsdata@ucl.ac.uk?subject=CLS variable search">contact us</a> .</p>          
+          </div>
+      </div>
+                
+    </div>
+
+
+<div class="container-left">
+    <div class="row">
+    <!--
+        <div class="col-md-12" style="margin-bottom:100px;">
+        -->
+            <div class="page-header" style="margin-top: 20px;"><h2>Descriptions of the available metadata</h2></div>
+            <table class="table table-striped">
+                <thead><th>Metadata Field</th><th>Metadata Sub-field</th><th>Description</th></thead>
+                <tr><td>study</td><td></td><td>The name of the cohort study that the variable is from </td></tr>
+                <tr><td>category</td><td></td><td>The category of data that the variable belongs to (e.g. geoggraphy, linked education data, linked health data, omics, substudy data, survey data)</td></tr>
+                <tr><td>research_topic</td><td></td><td>The broader concept(s) that are measured by this variable plus the specific concept(s) that are measured by this variable (note split by the ':' character)</td></tr>
+                <tr><td>sweep_year_age</td><td></td><td>The sweep that the variable is from plus the year the sweep took place plus the age of the cohort member at the time of the sweep</td></tr>
+                <tr><td>variable_name</td><td></td><td>The name of the variable in the depoisted dataset</td></tr>
+                <tr><td>variable_label</td><td></td><td>A short description of the variable</td></tr>
+                <tr><td>type_of_survey_data</td><td></td><td>Type of survey data that the variable represents (e.g. survey responses, paradata, linked or biomeasure).  Note populated only if the variable category is survey or substudy)</td></tr>
+                <tr><td>derived</td><td></td><td>Whether the variable represents derived data</td></tr>
+                <tr><td>UKDS_SN</td><td></td><td>The UKDS access level for the deposited dataset plus the study number that the dataset is included in at the UKDS</td></tr>
+                <tr><td>dataset_name</td><td></td><td>Name of the UKDS deposited dataset that the variable is included in </td></tr>
+                <tr><td>Harmony</td><td></td><td>Link to the </td></tr>
+                <tr><td>MORE INFO</td><td>includes:</td><td>Availabe by cliucking on the arrow in the left most column</td></tr>
+                <tr><td></td><td>Instrument</td><td>name of the instrument that contains the question related to this variable</td></tr>
+                <tr><td></td><td>Section</td><td>Section of the instrument that the question represented by this variable may be found</td></tr>
+                <tr><td></td><td>Instrument PDF</td><td>Link to a PDF of the instrument that contains the question related to this variable</td></tr>
+                <tr><td></td><td>Question</td><td>Question text for the question represented by this variable</td></tr>
+                <tr><td></td><td>Respondent</td><td>Person of who the question represented by this variable was asked</td></tr>
+                <tr><td></td><td>About whom</td><td>Who the question represented by this variable was asked about</td></tr>
+                <tr><td></td><td>Value labels</td><td>All possible response options and associated descriptive labels for categorical variables</td></tr>
+                <tr><td></td><td>Scale</td><td>The name of the scale that the question represented by the variable belongs to </td></tr>
+                <tr><td></td><td>Value Type</td><td>Type of data stored in this variable (numeric, string etc) plus the SPSS data type (F1 etc) </td></tr>
+            </table>
+
+        </div>
+
+    </div>
+</div>
+  </body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<!-- NOTE links to CSS and scripts include those to https: addresses, these resources could be opies down to the 'static' folder of the CSL variable search project ??-->
+<html lang="en">
+  <head>    
+
+    <!-- css stylking files  -->
+    <link href="https://cdn.datatables.net/2.0.0/css/dataTables.jqueryui.min.css" rel="stylesheet">
+    <link rel="stylesheet"  type="text/css" href="{{ url_for('static',  filename='bootstrap.min.css')}}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato|Comfortaa">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"   rel="stylesheet" />
+
+
+    <style>
+      body {background-color: white;} 
+      h1   {color: blue;}
+      p    {color: red;}
+      table,
+        th,
+        td {
+            border-collapse: collapse;
+            padding: 5px;
+        }
+ 
+<!-- 
+    .select2-results__options {
+     	max-height: 800px !important;
+     }
+    
+     .select2-container--default .select2-results>.select2-results__options {
+     	max-height: 800px !important;
+     }
+ --> 
+     .select2-container--classic .select2-results>.select2-results__options {
+     	max-height: 800px !important;
+     }  
+     
+   .logo {
+        width: 200px; /* Set the width you want */
+        height: auto; /* Maintain aspect ratio */
+      }
+      
+    .purple-text {
+        color: purple;
+      }
+    .black-text {
+        color: black;
+      }   
+    .dark-blue-text {
+        color: #00008B; /* Dark blue text */
+    }    
+  
+      .image-container {
+        margin-right: 60px;
+        display:inline;
+        vertical-align: top; 
+      }
+      
+      .text-container {
+        flex-grow: 1;
+        align-items: center;
+      }
+      .navbar{
+        justify-content: end;
+        border-radius: 20px;
+      }
+      .inline-container {
+          display: flex
+          flex: 1;
+          display:  inline-block;
+          vertical-align: top; 
+      }
+      
+        
+
+
+    </style>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>  
+    <script src="{{ url_for('static',  filename='bootstrap.min.js')}}"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>       
+    <script src="https://cdn.datatables.net/plug-ins/2.0.2/sorting/natural.js"></script>
+    <script src="{{ url_for('static',  filename='clipboard.min.js')}}"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="https://harmonydata.ac.uk/app/js/harmony-export.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
+    </script>
+  </head>
+
+
+  <body>
+
+
+    <div class="container" style="margin: 0;">
+ 
+
+
+
+      <div class="flex-container">
+          <div class="image-container">
+            <img src="https://cls.ucl.ac.uk/wp-content/themes/ucl/images/logo_red.svg" alt="" class="logo">
+          </div>
+          <div class="inline-container">
+            <nav class="navbar">  
+                <ul class="nav navbar-nav navbar-right">
+                    <li role="presentation"><a href="/"><span class="fas fa-search"></span> Browse Variables</a></li>
+                    <li role="presentation"><a href="/get_metadata"><span class="fas fa-cloud-download-alt"></span> Download Full Metadata</a></li>
+                    <li role="presentation"><a href="/about"><span class="fas fa-info"></span> Metadata Guide</a></li>
+                </ul>
+            </nav>            
+            <h1 class="dark-blue-text">Browse Variables</h1>
+
+          </div>
+        <div class="text-container">
+          <p class="purple-text" style="margin-top: 20px;"> This BETA site version 1.0 is subject to ongoing testing and improvements.  For more information, provide feedback or report issues, please <a href="mailto:clsdata@ucl.ac.uk?subject=CLS variable search">contact us</a> .</p>          
+        </div>
+      </div>
+
+
+        <div class="container">
+
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-md-12">
+                    <!-- <form action="/variables" method="POST"> -->
+
+                <form action="#" method ="post" id="filter_form">  
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" href="#collapse_filter" title='Click to view / hide filters'>
+                                    Filters
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse_filter" class="panel-collapse collapse in" role="tabpanel">
+                            <div class="panel-body">
+                            
+                                    <div class = "row">
+
+                                        <div class="col-md-3">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading"  >  <!-- href="#collapse_study_sweep" data-toggle="collapse" -->
+                                                    <a role="button" title='Click on study to view/hide sweeps.  Select all sweeps of a study OR individual sweeps.'>
+                                                        Study / Sweep
+                                                    </a>
+
+                                                </div>
+                                                <div id="collapse_study_sweep" role="tabpanel"> <!--class="panel-collapse collapse " -->
+                                                    <div class="panel-body">
+                                                        <ul class="select2-results__options" id="select2-results-options-2">
+                                                            <select id="study_sweep" name="study_sweep" data-placeholder="Click to filter on study / sweep " multiple="multiple" style="width: 100%" class="select2"  >
+                                                        </ul>
+                                                        
+                                                        </select> 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+
+                                        <div class="col-md-3">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading"  href="#collapse_category">  <!-- data-toggle="collapse" -->
+                                                    <a role="button">
+                                                        Category
+                                                    </a>
+                                                </div>
+                                                <div id="collapse_category" role="tabpanel"> <!--class="panel-collapse collapse " -->
+                                                    <div class="panel-body">
+                                                        <select class="select2" id="category" name="category" data-placeholder="Click to filter on category" multiple="multiple" style="width: 100%">
+                                                        
+                                                            {% for n in category_list %}
+                                                                <option value="{{n.category}}">{{ n.category }}</option>
+                                                            {% endfor %}
+                                                        
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-md-3">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading"  href="#collapse_data_source">  <!-- data-toggle="collapse" -->
+                                                    <a role="button"  title='Survey data type filter only enabled if category filtered on survey or substudy'>
+                                                        Survey data type
+                                                    </a>
+
+                                                </div>
+                                                <div id="collapse_survey_data_type"  role="tabpanel"> <!--class="panel-collapse collapse " -->
+                                                    <div class="panel-body">
+                                                        <select class="select2" id="survey_data_type" name="survey_data_type" data-placeholder="Click to filter on survey data type"  multiple="multiple" style="width: 100%">
+                                                        
+                                                            {% for n in survey_data_type_list %}
+                                                                <option value="{{n.survey_data_type}}">{{ n.survey_data_type }}</option>
+                                                            {% endfor %}
+                                                        
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                        
+
+ 
+                                         <div class="col-md-3">
+                                             <div class="panel panel-default">
+                                                 <div class="panel-heading"  >  <!-- href="#collapse_topic" data-toggle="collapse" -->
+                                                     <a role="button" title='Click on topic to view/hide sub-topics.  Select all sub-topics of a topic OR individual sub-topics.'>
+                                                         Research topic
+                                                     </a>
+
+                                                 </div>
+                                                 <div id="collapse_topic" role="tabpanel"> <!--class="panel-collapse collapse " -->
+                                                     <div class="panel-body">
+                                                         <ul class="select2-results__options" id="select2-results-options-1">
+                                                             <select id="topic_code" name="topic_code" data-placeholder="Click to filter on topic " multiple="multiple" style="width: 100%" class="select2"  >
+                                                         </ul>
+
+                                                         
+                                                         </select> 
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </div>                                 
+
+                                 
+
+                                   
+                                    </div>
+                           
+                            </div>
+
+                        </div>
+                    </div>
+                    <div>
+                        <span class="input-group-btn">
+                            <button  class="btn btn-default" name="xbutton" title='Click to generate / refresh output' >Submit &#187;</button>
+                            <a href="http://127.0.0.1:5000" role="button" class="btn btn-danger"><span class="oi" data-glyph="trash"></span> Start over </a>
+                            
+                        </span>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        
+
+                
+    </div>
+
+
+    <div class="dataTables-wrapper">
+    
+        <p><a href="javascript:void();" id="calculate"></a></p>
+          <span id="elements"></span>
+          <table id="variable_search_table", style="width:100%">
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </tfoot>            
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+          <tfoot>
+              <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+              </tr>
+          </tfoot>
+          </table>
+      </div>
+    </div>
+    
+
+ 
+    <script type="text/javascript">
+      $(document).ready(function() {
+      
+
+
+        
+        //  Survey data type enabled only if survey or substudy in category
+        //  disable   survey data type at start     
+        $('#survey_data_type').prop('disabled', true).val('');
+
+        $('#category').change(function() {
+           //  survey_data_type will be enabled only if category options contain 'survey' or 'substudy'
+           //  if catgegory changes and does not include 'survey' or 'substudy' then survey_typw will be disabled and selections cleared
+
+           const selectElement = document.getElementById('category');
+           const selectedOptions = Array.from(selectElement.options)
+                                       .filter(option => option.selected)
+                                       .map(option => option.value);
+
+           //  survey_in_category is a boolean checking if survey or substudy is cagtegory filer
+           var survey_in_category=(selectedOptions.includes('survey') ||selectedOptions.includes('substudy'))
+
+           if(!survey_in_category){
+
+               $("#survey_data_type").val(null).trigger('change');  
+               }
+
+           $('#survey_data_type').prop('disabled', !survey_in_category);
+            
+        
+        })
+         
+                
+
+        //  topics
+        topic_list = '{{topic_list|tojson}}';
+        var topic_parsed = JSON.parse(topic_list);
+        subtopic_list = '{{subtopic_list|tojson}}';
+        var subtopic_parsed = JSON.parse(subtopic_list);
+        $(function(){
+            var $select = $('#topic_code');
+            for (const a of topic_parsed){
+                var group = $('<optgroup label="' + a['label'] + '" />');
+                for (const d of subtopic_parsed){
+                    // if the first 3 chars of the subtopic value = one of the selected topic codes
+                    if (String(d['value']).substr(0, 3)==String(a['value'])){  
+                        // alert(a['value'],d['value'])
+                        var added = document.createElement('option');
+                        added.value = d['value'];
+                        added.innerHTML = d['label'];
+                        group.append(added);
+
+                    }
+                }
+                group.appendTo($select);
+            }
+            
+
+        });
+        
+        
+        
+        let optgroupState = {  
+           "select2-topic_code-results": [false], // Initial state for the first dropdown
+           "select2-study_sweep-results": [false]  // Initial state for the second dropdown
+        };
+        $("body").on('click', '.select2-container--open .select2-results__group', function() {
+          $(this).siblings().toggle();
+          let id = $(this).closest('.select2-results__options').attr('id');   
+          let index = $('.select2-results__group').index(this);       
+          optgroupState[id][index] = !optgroupState[id][index];
+        })
+   
+      
+        $('#topic_code').on('select2:open', function() {
+          $('.select2-dropdown--below').css('opacity', 0);
+          setTimeout(() => {
+            let groups = $('.select2-container--open .select2-results__group');
+            let id = "select2-topic_code-results"
+            
+            if (!optgroupState[id]) {
+              optgroupState[id] = {};
+            }
+            $.each(groups, (index, v) => {
+              optgroupState[id][index] = optgroupState[id][index] || false;
+              optgroupState[id][index] ? $(v).siblings().show() : $(v).siblings().hide();
+            })
+            $('.select2-dropdown--below').css('opacity', 1);
+          }, 0);
+        })
+        
+        
+        
+     
+ //   new code  ################################################
+ 
+     //Select2 Event handler for selecting an item
+    $('#topic_code').on("select2:selecting", function(evt, f, g) {
+      disableSel2Group('topic_code',evt, this, true);
+    });
+
+    // Select2 Event handler for unselecting an item
+    $('#topic_code').on("select2:unselecting", function(evt) {
+      disableSel2Group('topic_code',evt, this, false);
+    });
+
+
+
+  // At some point during the select2 instantation it created the 
+  // data object it needs with the source select option.
+  // This function, called by the events above to set the current status for the
+  // group for which the selected option belongs.
+  function disableSel2Group(id, evt, target, disabled) {
+    // Found a note in the Select2 formums on how to get the item to be selected
+    var selId = evt.params.args.data.id;
+    var selectElement = document.getElementById(id);
+    // if a topic code has been selected disbale all sub-topics
+    if(selId.slice(-2)=='99'){
+        for (var i = 0; i < selectElement.length; i++) {
+            if((selectElement.options[i].value.slice(0,3)==selId.slice(0,3))  &  selectElement.options[i].value != selId) {
+                // alert(selectElement.options[i].value)
+                selectElement.options[i].disabled = disabled;
+            }
+        }
+
+  
+    }
+    
+    // when any option is selected or deselected  for all topics (i.e. ending in '99' check if any  of the selected options are subtopics of that topic if so disable the topic)
+      for (var i = 0; i < selectElement.length; i++) {
+        if(selectElement.options[i].value.slice(-2)=='99') {
+            selectElement.options[i].disabled = false;
+
+            //  if any option already selected is a sub-topic of this topic
+            for (var j = 0; j < selectElement.length; j++) {
+                if((selectElement.options[j].value.slice(0,3)==selectElement.options[i].value.slice(0,3))  & selectElement.options[j].selected  & selectElement.options[j].value!=selectElement.options[i].value) {
+                    selectElement.options[i].disabled = true;
+                }
+            }
+    
+    
+            //  if the option now being selected is a sub-topic need to diable the topic
+            if((selectElement.options[i].value.slice(0,3)==selId.slice(0,3)) & selectElement.options[i].value!=selId){
+                selectElement.options[i].disabled = disabled; 
+            }
+
+    for (var j = 0; j < selectElement.length; j++) {
+        if(selectElement.options[j].selected) {
+            // alert(selectElement.options[j].value)
+        }
+    }
+    }
+    
+    }
+    }
+
+        
+        //  study_sweep
+        study_list = '{{study_list|tojson}}';
+        var study_parsed = JSON.parse(study_list);
+        sweep_list = '{{sweep_list|tojson}}';
+        var sweep_parsed = JSON.parse(sweep_list);
+        //   to here
+        $(function(){
+            var $select = $('#study_sweep');
+            for (const a of study_parsed){
+                var group = $('<optgroup label="' + a['study'] + '" />');
+                for (const d of sweep_parsed){
+                    if (String(d['study'])==String(a['study'])){  
+                        // alert( d['sweep-year-age'])
+                        var added = document.createElement('option');
+                        added.value = d['sweep-year-age'];
+                        added.innerHTML = d['sweep-year-age'];
+                        group.append(added);
+
+                    }
+                }
+                group.appendTo($select);
+            }
+            
+
+        });
+        
+     
+     
+        $('#study_sweep').on('select2:open', function() {
+          $('.select2-dropdown--below').css('opacity', 0);
+       
+          setTimeout(() => {
+            let groups = $('.select2-container--open .select2-results__group');
+            // let id = $('.select2-results__options').attr('id');  
+            let id =  "select2-study_sweep-results"          
+            if (!optgroupState[id]) {
+              optgroupState[id] = {};
+            }
+            $.each(groups, (index, v) => {
+              optgroupState[id][index] = optgroupState[id][index] || false;
+              optgroupState[id][index] ? $(v).siblings().show() : $(v).siblings().hide();
+            })
+            $('.select2-dropdown--below').css('opacity', 1);
+          }, 0);
+         })
+   
+
+ 
+     //Select2 Event handler for selecting an item
+    $('#study_sweep').on("select2:selecting", function(evt, f, g) {
+      disableSel2Group2('study_sweep',evt, this, true);
+    });
+
+    // Select2 Event handler for unselecting an item
+    $('#study_sweep').on("select2:unselecting", function(evt) {
+      disableSel2Group2('study_sweep',evt, this, false);
+    });
+
+
+
+  // At some point during the select2 instantation it created the 
+  // data object it needs with the source select option.
+  // This function, called by the events above to set the current status for the
+  // group for which the selected option belongs.
+  //require a different disableSel2Group2 function  for study_sweep as discerning all study is different to topic_code
+  function disableSel2Group2(id, evt, target, disabled) {
+    // Found a note in the Select2 formums on how to get the item to be selected
+    var selId = evt.params.args.data.id;
+    var selectElement = document.getElementById(id);
+    // if all sweeps of a  study has been selected disbable all sweeps
+    if(selId.slice(0,7)==' -- ALL'){
+
+        for (var i = 0; i < selectElement.length; i++) {
+            if((selectElement.options[i].value.slice(0,2)==selId.slice(8,10))  &  selectElement.options[i].value != selId) {
+                // alert(selectElement.options[i].value)
+                selectElement.options[i].disabled = disabled;
+            }
+        } 
+    }
+ 
+    // when any option is selected or deselected  for all topics (i.e. start in ' -- ALL' check if any  of the selected options are subtopics of that topic if so disable the topic)
+      for (var i = 0; i < selectElement.length; i++) {
+        if(selectElement.options[i].value.slice(0,7)==' -- ALL') {
+
+            selectElement.options[i].disabled = false;
+
+            //  if any option already selected is a sweep  of this study
+            for (var j = 0; j < selectElement.length; j++) {
+                if((selectElement.options[j].value.slice(0,2)==selectElement.options[i].value.slice(8,10))  & selectElement.options[j].selected  & selectElement.options[j].value!=selectElement.options[i].value) {
+                    selectElement.options[i].disabled = true;
+                }
+            }
+    
+    
+            //  if the option now being selected is a sweep need to diable the study  ALL sweeps
+            if((selectElement.options[i].value.slice(8,10)==selId.slice(0,2)) & selectElement.options[i].value!=selId){
+                selectElement.options[i].disabled = disabled; 
+            }
+
+    for (var j = 0; j < selectElement.length; j++) {
+        if(selectElement.options[j].selected) {
+            // alert(selectElement.options[j].value)
+        }
+    }
+    }
+    
+    }
+
+    }
+
+    
+
+
+        // Formatting function for row details - modify as you need
+        function format(d) {
+            // `d` is the original data object for the row
+            return (
+                '<dl>' +
+                '<dt>MORE INFO:</dt>' +
+                '<dd>' +
+                d[13] +
+                '</dd>' +
+                // '<dt>Extra info:</dt>' +
+                // '<dd>And any further details here (images etc)...</dd>' +
+                '</dl>'
+            );
+        }
+        var table = null;  
+        $('button').on('click',  function (e) {  
+          e.preventDefault();
+           
+          // var selectedCohort = $(this).children("option:selected").val();  
+
+          $('collapse_filter').collapse()
+          
+          var selectedStudy = $("select.study").children("option:selected").val(); 
+          
+                  
+          var formData = JSON.stringify($("#filter_form").serializeArray());
+          
+          // alert(formData)
+          if(formData.length==2){
+            alert('Please select at least one filter')
+          }
+
+          $.getJSON('/_get_table', {
+            study: selectedStudy,
+            filter_values: formData
+ 
+          }, function(data) {
+            var first_time=1 
+            $("tfoot",table).remove();
+            if (table !== null) {
+              var first_time=0  
+              table.destroy();
+              table = null;
+              $("#variable_search_table").empty();
+            }   
+            // need to add footer here as table.destroy removes the footer html on seond and subsequent calls
+            $("#variable_search_table").append("<tfoot><tr><th></th><th></th><th></th><th></th></tr></tfoot>"); 
+            table = $("#variable_search_table").DataTable({         
+              deferRender: true,
+              data: data.my_table,
+              columns: data.columns,            
+              columns: [               
+                {
+                    className: 'dt-control',
+                    orderable: false,
+                    data: null,
+                    defaultContent: ''
+                }, 
+                {title:'study.....'},
+                {title:'category...'},
+                {title:'research_topic...............'},
+                {title:'sweep-year-age.......'},
+                {title: 'variable_name'},
+                {title:'variable_label..........................'},
+                {title:'type_of_survey_data'},
+                {title:'derived'},
+                {title:	'UKDS_SN....' ,     
+                     render: function ( data, type, row) {
+                        return '<a href="https://beta.ukdataservice.ac.uk/datacatalogue/studies/study?id='+data.replace(/EUL: SN|SA: SN|SA: SN/i, "")+'" target="_blank">'+data+'</a>';
+                    } 
+                },
+                {title: 'dataset_name'},
+
+// NOTE harmony linkmay not be included for  beta version as memory issues with too man variabkles select (e.g. all variables for a cohort)
+//  To include one or both hamrony links here  uncomment syntax for both links in this section and commment out the sdummy columns (placeholders) in the next section
+//  NOTE possoble  issues with Harmony link included when too many variables are retrieved from the server or where there are 2 Harmony links.  
+// comment out 1 or both of the Harmony links and include 0,1, or both blank columns below.  All can be removed if decision made to not incldue any hamony links in individual rows.
+//  NOTE use /* and */ to comment out
+/* 
+
+                // including first harmony link using variable name, question text and dataset name    
+                //   included for now   
+                {
+                title: 'Harmony',
+                autoWidth: true,
+                render: function (data, type, row, meta) {
+                const harmonyLink = document.createElement("harmony-export");
+                 harmonyLink.questions =[
+                   {
+                     "question_no": data.split('||')[0],
+                     "question_text": data.split('||')[1]
+                    }]
+                
+                harmonyLink.instrument_name = "CLS metadata search: "+ data.split('||')[2];
+                return harmonyLink;
+                },
+                }, 
+   
+
+
+                // including second harmony link using variable name, variable label and dataset name    
+                //   not using for now      
+                {
+                title: 'Harmony_vlab',
+                autoWidth: true,
+                render: function (data, type, row, meta) {
+                const harmonyLink = document.createElement("harmony-export");
+                 harmonyLink.questions =[
+                   {
+                     "question_no": data.split('||')[0],
+                     "question_text": data.split('||')[1]
+                    }]
+                
+                harmonyLink.instrument_name = "CLS metadata search: "+ data.split('||')[2];
+                return harmonyLink;
+                },
+                }, 
+
+*/ 
+
+            //  below are 2 placeholder columns to add in black columns of eithe ror both of the Harmony link columns  above are excluded.  i.e. to keep sam number of columns
+            //   to add harmony link back in uncomment above and comment out the 2 sets of  3 lines each below {....},  this allows theserver to send the harmony metadata but temporarily render a bkank column
+            //   just being used as placeholders for if we include one (just quetion text or just value labels ) or 2 (both qusetion text and varlu labels) Harmony links above
+
+              {title: '',
+                    data: null,
+                    defaultContent: ''},  
+                    
+              {title: '',
+                    data: null,
+                    defaultContent: ''}, 
+
+              ],
+           
+              searching: true,
+              select: true,
+              footer: true,
+              columnDefs: [
+                { targets:[13], visible: false}
+              ],
+
+            });
+
+          });
+          
+          return false;
+
+        });
+        // Add event listener for opening and closing details
+        $('#variable_search_table').on('click', 'td.dt-control', function (e) {
+            let tr = e.target.closest('tr');
+            let row = table.row(tr);
+        
+            if (row.child.isShown()) {
+                // This row is already open - close it
+                row.child.hide();
+            }
+            else {
+                // Open this row
+                row.child(format(row.data())).show();
+            }
+        
+
+
+        });
+    })
+    </script>
+  </body>
+</html>

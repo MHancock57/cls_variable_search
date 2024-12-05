@@ -1,0 +1,42 @@
+to run the CLS_variable_search_tool Flask application
+
+Login in to the D@UA - Legacy desktop.
+
+open anaconda  |  anaconda prompt  (from the search bar)
+
+Type
+S:
+cd S:\IOECLS_Data_Management\_Metadata\CLS_variable_search_tool_dev
+flask --app cls_variable_search_flask.py --debug run
+
+
+If Flask is running successfully:  Should see the text below in the Anaconda prompt window.
+ * Serving Flask app 'cls_variable_search_flask.py'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:5000
+Press CTRL+C to quit
+ * Restarting with watchdog (windowsapi)
+ * Debugger is active!
+ * Debugger PIN: 492-805-783
+
+
+Copy the address below from the output
+http://127.0.0.1:5000
+
+and paste into a browser address bar
+
+NOTE if no screen appears after 30 seconds or any issues check the anaconda prompt window for errors.
+    Also right click on the CLS variable search tool webpage, select ‘Inspect’ (bottom-most option) 
+    and click on the ‘Console’ tab (2nd from left) and see if any errors.
+
+
+
+
+=========================================================================
+to create the csv files ready for the flask application above 
+   (NOTE only need to when metadata data dictionary has changed and been copied over from the DSH) 
+
+
+open Spyder and run file cls_variable_search_create_csv_files.py in folder 'S:\IOECLS_Data_Management\_Metadata\CLS_variable_search_tool_dev'
+
